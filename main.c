@@ -4,20 +4,22 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdlib.h>
+
 int main(int ac, char **av)
 {
     int fd;
     char *line;
     int i = 0;
-    if (ac == 2)
+
+    fd = open("test2", O_RDONLY);
+    while ((i < 7))
     {
-        fd = open(av[1], O_RDONLY);
-        while ((line = get_next_line(fd)))
-        {
-            printf("%s\n", line);
-            // free(line);
-        }
-        close(fd);
+        line = get_next_line(fd);
+        printf("%s\n", line);
+        printf("adress: %p\n", line);
+        free(line);
+        i++;
     }
+    close(fd);
     return (0);
 }

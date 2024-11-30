@@ -30,6 +30,8 @@ char	*ft_strchr(const char *s, int c)
 	int	i;
 	int	j;
 
+	if (!s)
+		return (0);
 	i = ft_strlen(s);
 	j = 0;
 	while (i >= 0)
@@ -61,14 +63,30 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 	return (dest);
 }
 
+char	*ft_strdup(const char *s)
+{
+	char	*dup_str;
+	size_t	s_len;
+
+	s_len = ft_strlen(s);
+	dup_str = (char *)malloc(s_len + 1);
+	if (!dup_str)
+		return (0);
+	ft_memcpy(dup_str, s, s_len);
+	dup_str[s_len] = '\0';
+	return (dup_str);
+}
+
 char	*ft_strjoin(char const *s1, char const *s2)
 {
 	size_t	s1_len;
 	size_t	s2_len;
 	char	*str;
 
-	if (!s1 || !s2)
+	if (!s1 && !s2)
 		return (0);
+	if(!s1)
+		return (ft_strdup(s2));
 	s1_len = ft_strlen(s1);
 	s2_len = ft_strlen(s2);
 	str = (char *)malloc(s1_len + s2_len + 1);

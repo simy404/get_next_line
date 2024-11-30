@@ -12,14 +12,16 @@ int main(int ac, char **av)
     int i = 0;
 
     fd = open("test2", O_RDONLY);
-    while ((i < 7))
-    {
+
+    do {
         line = get_next_line(fd);
-        printf("%s\n", line);
-        printf("adress: %p\n", line);
+        if(!line)
+            break;
+        printf("%s", line);
+        //printf("adress: %p\n", line);
         free(line);
         i++;
-    }
+    } while (line != NULL);
     close(fd);
     return (0);
 }

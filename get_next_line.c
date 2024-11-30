@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hsamir <hsamir@student.42kocaeli.com.tr>   +#+  +:+       +#+        */
+/*   By: hsamir <hsamir@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/23 15:48:10 by hsamir            #+#    #+#             */
-/*   Updated: 2024/11/24 14:11:44 by hsamir           ###   ########.fr       */
+/*   Updated: 2024/11/30 18:49:15 by hsamir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,30 +17,26 @@
 
 char *read_line(int fd, char *str)
 {
-    char *buffer;
-    char *temp;
-    int read_bytes;
+    char	buffer[BUFFER_SIZE + 1];
+    char	*temp;
+    int		read_bytes;
 
     read_bytes = 1;
-    buffer = malloc(BUFFER_SIZE + 1);
-    if (!buffer)
-        return (NULL);
-    while(read_bytes > 0 && !ft_strchr(str, '\n'))
+    while (read_bytes > 0 && !ft_strchr(str, '\n'))
     {
         read_bytes = read(fd, buffer, BUFFER_SIZE);
+		if (!read_bytes)
+			break;
         if (read_bytes == -1)
         {
-            free(buffer); //TODO if read fails, what can i do with str ?
+            free(str);
             return (NULL);
         }
         buffer[read_bytes] = '\0';
         temp = str; //TODO find a another way to free str
         str = ft_strjoin(str, buffer); //TODO if buffer is null, what can i do ?
-            // printf("buffer: %s\n", buffer);
-            // printf("merged str: %s\n", str);
         free(temp);
     }
-    free(buffer);
     return (str);
 }
 
@@ -49,27 +45,16 @@ char *get_line(char *str)
     int i;
     char *line;
 
-    i = 0;
-    while (str[i] && str[i] != '\n')
-        i++;
-    if (str[i] == '\n')
-        i++;
-    line = malloc(i + 1);
-    if (!line)
-        return (NULL);
-    i = 0;
-    while (str[i] && str[i] != '\n')
-    {
-        line[i] = str[i];
-        i++;
-    }
-    if (str[i] == '\n')
-    {
-        line[i] = str[i];
-        i++;
-    }
-    line[i] = '\0';
-    return (line);
+	line = ft_strchr(str, '\n');
+	if (!line)
+		return (ft_strdup(str));
+	i = line - str;
+	line = malloc(i + 2);
+	if (!line)
+		return (NULL);
+	ft_memcpy(line, str, i + 1);
+	line[i + 1] = '\0';
+	return (line);
 }
 
 char* get_leftover(char *str)
@@ -78,43 +63,35 @@ char* get_leftover(char *str)
     int j;
     char *leftover;
 
-    i = 0;
-    while (str[i] && str[i] != '\n')
-        i++;
-    if (!str[i])
-    {
-        free(str);
-        return (NULL);
-    }
-    leftover = malloc(ft_strlen(str) - i + 1); // test\ntest\n\0
-    if (!leftover)
-        return (NULL);
-    i++;
-    j = 0;
-    while (str[i])
-    {
-        leftover[j] = str[i];
-        i++;
-        j++;
-    }
-    leftover[j] = '\0';
-    free(str);
-    return (leftover);
+	leftover = ft_strchr(str, '\n');
+	if (!leftover)
+		return (NULL); //TODO i have to check it -------            ab\n\0
+    i = leftover - str;
+	printf("i: %d\nstr - i = %ld \n", i ,(ft_strlen(str) - i));
+	if (!i)
+		return (0);
+	leftover = malloc(ft_strlen(str) - i);
+	if (!leftover)
+		return (NULL);
+	ft_memcpy(leftover, &str[i + 1] ,(ft_strlen(str) - i - 1));
+	leftover[ft_strlen(str) - i - 1] = 0;
+	return (leftover);
 }
 
 char    *get_next_line(int fd)
 {
     static char *leftover = NULL;
-    char        *next_line;
+    char        *next_line = NULL;
+	char 	  *temp;
 
-    if (fd < 0 || BUFFER_SIZE  <= 0 || read(fd, NULL, 0) == -1) //TODO do i have to check -1 ?
+    if (fd < 0 || BUFFER_SIZE  <= 0) //|| read(fd, NULL, 0) == -1) //TODO do i have to check -1 ?
         return (0);
     leftover = read_line(fd, leftover);
     if (!leftover)
         return (NULL);
-    next_line = get_line(leftover);
+	next_line = get_line(leftover);
+	temp = leftover;
     leftover = get_leftover(leftover);
-    // printf("leftover: %s\n", leftover);
-
+	free(temp);
     return (next_line);
 }

@@ -6,12 +6,11 @@
 /*   By: hsamir <hsamir@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/23 15:48:10 by hsamir            #+#    #+#             */
-/*   Updated: 2024/12/01 11:04:58 by hsamir           ###   ########.fr       */
+/*   Updated: 2024/12/01 13:33:44 by hsamir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdlib.h>
 #include <unistd.h>
 
 char	*fill_buffer(int fd, char *str)

@@ -6,16 +6,16 @@
 /*   By: hsamir <hsamir@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/24 11:10:05 by hsamir            #+#    #+#             */
-/*   Updated: 2024/11/30 17:08:43 by hsamir           ###   ########.fr       */
+/*   Updated: 2024/12/01 11:04:23 by hsamir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
-#include <stddef.h>
+#include <unistd.h>
 
 size_t	ft_strlen(const char *s)
 {
-	int	i;
+	size_t	i;
 
 	i = 0;
 	while (s[i])
@@ -30,8 +30,6 @@ char	*ft_strchr(const char *s, int c)
 	int	i;
 	int	j;
 
-	if (!s)
-		return (0);
 	i = ft_strlen(s);
 	j = 0;
 	while (i >= 0)
@@ -85,9 +83,9 @@ char	*ft_strjoin(char const *s1, char const *s2)
 
 	if (!s1 && !s2)
 		return (0);
-	if(!s1 && s2)
+	if (!s1 && s2)
 		return (ft_strdup(s2));
-	if(s1 && !s2)
+	if (s1 && !s2)
 		return (ft_strdup(s1));
 	s1_len = ft_strlen(s1);
 	s2_len = ft_strlen(s2);

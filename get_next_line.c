@@ -62,15 +62,9 @@ char	*get_leftover(char *str)
 {
 	char	*newline_ptr;
 
-	if (str)
-	{
-		newline_ptr = ft_strchr(str, '\n');
-		if (newline_ptr)
-		{
-			if (newline_ptr[1] != '\0')
-				return (ft_strdup(newline_ptr + 1));
-		}
-	}
+	newline_ptr = ft_strchr(str, '\n');
+	if (newline_ptr && newline_ptr[1] != '\0')
+		return (ft_strdup(newline_ptr + 1));
 	return (NULL);
 }
 

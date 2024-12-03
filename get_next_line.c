@@ -58,14 +58,20 @@ char	*get_part_until_nl(char *str)
 	return (line);
 }
 
-char	*get_leftover(char *str)
+int	update_leftover(char **leftover)
 {
 	char	*newline_ptr;
 
-	newline_ptr = ft_strchr(str, '\n');
+	newline_ptr = ft_strchr(*leftover, '\n');
 	if (newline_ptr && newline_ptr[1] != '\0')
-		return (ft_strdup(newline_ptr + 1));
-	return (NULL);
+	{
+		*leftover = ft_strdup(newline_ptr + 1);
+		if (!(*leftover))
+			return (1);
+	}
+	else
+		*leftover = NULL;
+	return (0);
 }
 
 char	*get_next_line(int fd)
@@ -87,7 +93,11 @@ char	*get_next_line(int fd)
 		return (NULL);
 	}
 	temp = leftover;
-	leftover = get_leftover(leftover);
+	if (update_leftover(&leftover))
+	{
+		free(next_line);
+		next_line = NULL;
+	}
 	free(temp);
 	return (next_line);
 }
